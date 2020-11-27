@@ -1,0 +1,2 @@
+At c:\js folder type this to run mongodb server with given data folder
+mongodb\bin\mongod.exe --dbpath=mongodb-data
