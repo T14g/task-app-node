@@ -19,7 +19,7 @@ app.post('/users', (req, res) => {
         res.send(user);
     }).catch((e) => {
         res.status(400).send(e);//bad request, single line concept, chaining
-    })
+    }) 
 });
 
 app.listen(port , () => {
