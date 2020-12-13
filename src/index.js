@@ -44,7 +44,7 @@ app.get('/users', (req, res) => {
 });
 
 
-//Find one by ID
+//Get one by ID
 app.get('/users/:id', (req, res) => {
 
     // _ prefixed variable names are considered private by convention but are still public.
@@ -60,6 +60,28 @@ app.get('/users/:id', (req, res) => {
         res.status(500).send();
     })
 })
+
+app.get('/tasks', (req, res) => {
+    Task.find({}).then((tasks) => {
+        res.send(tasks);
+    }).catch((e) => {
+        res.status(500).send(e);
+    })
+})
+
+app.get('/tasks/:id', (req, res) =>{
+    const _id = req.params.id;
+    
+        Task.findById(_id).then((task) => {
+            if(!task) {
+                return res.status(404).send()
+            }
+
+            res.send(task);
+        }).catch((e) => {
+            res.status(500).send();
+        })
+});
 
 app.listen(port , () => {
     console.log("Server Running on Port " + port);
