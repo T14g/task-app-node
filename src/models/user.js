@@ -1,7 +1,10 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
+const bcrypt    = require('bcryptjs');
 
-const User = mongoose.model('User', {
+//Behind the scenes mongoose convert the object into a schema
+//You can make use of schemas for advanced things like password encrypt
+const userSchema = new mongoose.Schema({
     name: {
         type: String,
         required: true,
@@ -40,6 +43,22 @@ const User = mongoose.model('User', {
         }
 
     }
-});
+})
+
+//Standart function because you will need the "this"
+userSchema.pre('save', async function(next) {
+    //The individual user that will be saved
+    const user = this;
+
+    if(user.isModified('password')) {
+
+        user.password = await bcrypt.hash(user.password, 8);
+    }
+
+    //When you done you must call next()
+    next();
+})
+
+const User = mongoose.model('User', userSchema);
 
 module.exports = User;
