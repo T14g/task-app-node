@@ -2,12 +2,12 @@ const mongoose = require('mongoose');
 const validator = require('validator');
 
 const User = mongoose.model('User', {
-    name : {
+    name: {
         type: String,
         required: true,
         trim: true
     },
-    email : {
+    email: {
         type: String,
         required: true,
         trim: true,
@@ -18,19 +18,19 @@ const User = mongoose.model('User', {
             }
         }
     },
-    password : {
+    password: {
         type: String,
         required: true,
         trim: true,
         minlength: 7,
         validate(value) {
-            if(value.toLowerCase().includes('password')){
+            if (value.toLowerCase().includes('password')) {
                 throw new Error('Password contains the word password')
             }
         }
     },
 
-    age : {
+    age: {
         type: Number,
         default: 0,
         validate(value) {
