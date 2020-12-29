@@ -1,6 +1,7 @@
-const mongoose = require('mongoose');
+const mongoose  = require('mongoose');
 const validator = require('validator');
 const bcrypt    = require('bcryptjs');
+const jwt       = require('jsonwebtoken');
 
 //Behind the scenes mongoose convert the object into a schema
 //You can make use of schemas for advanced things like password encrypt
@@ -42,10 +43,30 @@ const userSchema = new mongoose.Schema({
                 throw new Error('Age must be a positive number')
             }
         }
-
-    }
+    },
+    tokens : [{
+        token :{
+            type: String,
+            required: true
+        }
+    }]
 })
 
+//Instance methods are acessible on instance
+userSchema.methods.generateAuthToken = async function() {
+    const user = this;
+    const token = jwt.sign({ '_id': user._id.toString()}, 'testingJWT');
+
+    //Concatenate item on the array and save
+    user.tokens = user.tokens.concat({ token });
+    
+    //Save to the db
+    await user.save();
+    
+    return token;
+}
+
+//Static methods are acessible on the MODEL
 userSchema.statics.findByCredentials = async (email, password) => {
     const user = await User.findOne({email});
 
