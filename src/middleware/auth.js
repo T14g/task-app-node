@@ -7,7 +7,7 @@ const auth = async (req, res, next) => {
 
         //Bearer === Bearer token
         //Bearer tokens allow requests to authenticate using an access key, such as a JSON Web Token (JWT)
-        const token = req.header('Authorization').replace('Bearer ', '');
+        const token = req.header('authToken').replace('Bearer ', '');
         const decoded = jwt.verify(token, 'testingJWT');
 
         //Id is in the token
