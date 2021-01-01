@@ -4,10 +4,9 @@ const User = require('../models/user');
 const auth = async (req, res, next) => {
 
     try {
-
         //Bearer === Bearer token
         //Bearer tokens allow requests to authenticate using an access key, such as a JSON Web Token (JWT)
-        const token = req.header('authToken').replace('Bearer ', '');
+        const token = req.header('authorization').replace('Bearer ', '');
         const decoded = jwt.verify(token, 'testingJWT');
 
         //Id is in the token
@@ -19,7 +18,9 @@ const auth = async (req, res, next) => {
             throw new Error();
         }
 
+        //You added those two to req(request), remember
         req.user = user;
+        req.token = token;
         next();
 
     } catch (e) {
