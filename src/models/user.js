@@ -83,6 +83,21 @@ userSchema.statics.findByCredentials = async (email, password) => {
     return user;
 }
 
+//Return the public data removing password and tokens from it
+//res.send() will call this toJSON method
+//you can manipulate the object here
+//when you use json.send() stringfy is called and this toJSON method is called so
+//to manipulate the json
+userSchema.methods.toJSON = function () {
+    const user = this;
+    const userObject = user.toObject();
+
+    delete userObject.password;
+    delete userObject.tokens;
+
+    return userObject;
+}
+
 // Hash password before saving 
 userSchema.pre('save', async function(next) {
     //The individual user that will be saved
