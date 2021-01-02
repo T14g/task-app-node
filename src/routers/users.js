@@ -21,28 +21,7 @@ router.get('/users/me', auth ,async (req, res) => {
     res.send(req.user);
 });
 
-
-//Get one by ID
-router.get('/users/:id', async (req, res) => {
-
-    // _ prefixed variable names are considered private by convention but are still public.
-    const _id = req.params.id;
-
-    try {
-        const user = await User.findById(_id);
-
-        if (!user) {
-            return res.status(404).send();
-        }
-
-        res.send(user);
-    } catch (e) {
-        res.status(500).send();
-    }
-
-})
-
-router.patch('/users/:id', async (req, res) => {
+router.patch('/users/me', auth ,async (req, res) => {
 
     //Return an array of strings with all object properties
     const updates = Object.keys(req.body);
@@ -57,31 +36,24 @@ router.patch('/users/:id', async (req, res) => {
     }
 
     try {
-        const user = await User.findById(req.params.id);
+        updates.forEach((update) => req.user[update] = req.body[update]);
 
-        updates.forEach((update) => user[update] = req.body[update]);
+        await req.user.save();
 
-        await user.save();
-
-        if (!user) {
-            return res.status(400).send();
-        }
-
-        res.send(user);
+        res.send(req.user);
     } catch (e) {
         res.status(400).send(e);
     }
 })
 
-router.delete('/users/:id', async (req, res) => {
+
+//Remember you attached user to req with the auth middleware
+router.delete('/users/me', auth, async (req, res) => {
     try {
-        const user = await User.findByIdAndDelete(req.params.id);
 
-        if (!user) {
-            res.status(404).send();
-        }
+        await req.user.remove();
 
-        res.send(user);
+        res.send(req.user);
     } catch (e) {
         res.status(500).send(e);
     }
