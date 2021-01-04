@@ -98,6 +98,16 @@ userSchema.methods.toJSON = function () {
     return userObject;
 }
 
+//It's a virtual relationship between user and his tasks
+// a relationship between two entities
+//localField here
+//foreignField there
+userSchema.virtual('tasks', {
+    ref: 'Task',
+    localField: '_id',
+    foreignField: 'owner'
+})
+
 // Hash password before saving 
 userSchema.pre('save', async function(next) {
     //The individual user that will be saved
