@@ -2,6 +2,7 @@ const mongoose  = require('mongoose');
 const validator = require('validator');
 const bcrypt    = require('bcryptjs');
 const jwt       = require('jsonwebtoken');
+const Task      = require('../models/task');
 
 //Behind the scenes mongoose convert the object into a schema
 //You can make use of schemas for advanced things like password encrypt
@@ -121,6 +122,14 @@ userSchema.pre('save', async function(next) {
     //When you done you must call next()
     next();
 })
+
+//Using middleware to delete users task when delete user account
+//Its a good idea to use a middleware for this
+userSchema.pre('remove', async function(next) {
+    const user = this;
+    await Task.deleteMany({owner: user._id});
+    next();
+});
 
 const User = mongoose.model('User', userSchema);
 
