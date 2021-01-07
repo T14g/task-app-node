@@ -51,6 +51,8 @@ const userSchema = new mongoose.Schema({
             required: true
         }
     }]
+}, {
+    timestamps: true
 })
 
 //Instance methods are acessible on instance
