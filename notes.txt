@@ -2,3 +2,5 @@ At c:\js folder type this to run mongodb server with given data folder
 mongodb\bin\mongod.exe --dbpath=mongodb-data
 
 Use NPM modules for generic things like email validations
+
+API keys hiden
